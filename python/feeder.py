@@ -202,8 +202,7 @@ async def main():
 
     # Connect with role=feeder
     try:
-        await sio.connect(SOCKET_URL, transports=['polling', 'websocket'],
-                          headers={'role': 'feeder'})
+        await sio.connect(f"{SOCKET_URL}?role=feeder", transports=['polling', 'websocket'])
     except Exception as e:
         print(f'[!] Socket connection failed: {e}')
         print('[!] Make sure socket-server.js is running on port 3001')
@@ -214,7 +213,7 @@ async def main():
     print('-' * 80)
 
     global running
-    running = True
+    running = False
 
     while True:
         if running:

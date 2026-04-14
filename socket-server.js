@@ -23,7 +23,9 @@ let pythonFeeder = null;
 io.on('connection', (socket) => {
   connectedClients++;
 
-  if (socket.handshake.query.role === 'feeder') {
+  const role = socket.handshake.query.role || socket.handshake.headers.role;
+  
+  if (role === 'feeder') {
     pythonFeeder = socket;
     console.log(`[+] Python Feeder connected: ${socket.id}`);
 

@@ -95,15 +95,21 @@ export default function LiveMap({ atms, transactions, alerts, onAlertClick }: Li
     }
     if (last.length > 0) {
       const newest = last[last.length - 1];
-      const marker = L.circleMarker([newest.lat, newest.lng], {
-        radius: newest.is_fraud ? 7 : 3,
-        color: newest.is_fraud ? '#ef4444' : '#10b981',
-        fillColor: newest.is_fraud ? '#ef4444' : '#10b981',
-        fillOpacity: 0.85,
-        weight: newest.is_fraud ? 1.5 : 0,
-      })
-        .addTo(mapRef.current)
-        .bindPopup(`
+      let marker;
+      if (newest.is_fraud) {
+        const FraudIcon = L.divIcon({ className: 'glow-marker-red', iconSize: [24, 24], iconAnchor: [12, 12] });
+        marker = L.marker([newest.lat, newest.lng], { icon: FraudIcon }).addTo(mapRef.current);
+      } else {
+        marker = L.circleMarker([newest.lat, newest.lng], {
+          radius: 4,
+          color: '#10b981',
+          fillColor: '#10b981',
+          fillOpacity: 0.85,
+          weight: 0,
+        }).addTo(mapRef.current);
+      }
+      
+      marker.bindPopup(`
           <div style="font-family:Inter,sans-serif;padding:4px">
             <div style="font-size:12px;font-weight:800;color:${newest.is_fraud ? '#f87171' : '#34d399'};margin-bottom:4px">
               ${newest.is_fraud ? '🚨 FRAUD DETECTED' : '✅ Valid Transaction'}

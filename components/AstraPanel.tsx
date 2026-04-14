@@ -54,92 +54,81 @@ export default function AstraPanel({ alert, onClose, onDeployUnits, onFreezeAcco
       </div>
 
       {/* Body */}
-      <div className="panel-scroll" style={{ flex: 1, padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-        {/* Action Buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          <button className="btn btn-primary" onClick={onDeployUnits}
-            style={{ width: '100%', justifyContent: 'center', padding: '10px', fontSize: 11 }}>
-            🚀 DEPLOY UNITS
-          </button>
-          <button className="btn btn-danger" onClick={onFreezeAccounts}
-            style={{ width: '100%', justifyContent: 'center', padding: '10px', fontSize: 11 }}>
-            ❄️ FREEZE ACCTS
-          </button>
+      <div className="panel-scroll" style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        
+        {/* Threat Level */}
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: 1, textTransform: 'uppercase' }}>THREAT LEVEL</span>
+            <span style={{ fontSize: 10, fontWeight: 800, color: '#ef4444' }}>CRITICAL</span>
+          </div>
+          <div className="risk-bar-track" style={{ height: 6 }}>
+            <div className="risk-bar-fill" style={{ width: `${riskPct}%`, background: '#ef4444' }} />
+          </div>
         </div>
 
-        {/* Transaction Details */}
-        <div style={{
-          background: 'rgba(239,68,68,0.05)',
-          border: '1px solid rgba(239,68,68,0.15)',
-          borderRadius: 10, padding: 14,
-        }}>
-          <div style={{ fontSize: 9, fontWeight: 800, color: '#ef4444', letterSpacing: 2, marginBottom: 12, textTransform: 'uppercase' }}>
-            ▸ THREAT ANALYSIS
-          </div>
+        {/* Details Grid */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {[
-            { label: 'TRANSACTION ID', value: alert.transaction.txn_id.split('-')[0] + '...', mono: true },
-            { label: 'AMOUNT FLAGGED', value: `₹${alert.transaction.amount.toLocaleString('en-IN')}`, bold: true },
-            { label: 'INCIDENT CITY', value: alert.transaction.city },
-            { label: 'FRAUD TYPE', value: alert.transaction.fraud_type ?? 'ANOMALY' },
-          ].map(({ label, value, mono, bold }) => (
-            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, fontSize: 12 }}>
-              <span style={{ color: 'var(--text-muted)', fontSize: 10, fontWeight: 700, letterSpacing: 0.5 }}>{label}</span>
+            { label: 'Suspect ID:', value: alert.transaction.sender_id || `User_${alert.transaction.txn_id.substring(0,4)}`, mono: true },
+            { label: 'Amount:', value: `₹${alert.transaction.amount?.toLocaleString('en-IN')}`, mono: true },
+            { label: 'Origin:', value: alert.transaction.city },
+            { label: 'Velocity:', value: 'HIGH (5.2 tx/hr)', highlight: true },
+          ].map(({ label, value, mono, highlight }) => (
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 8 }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: 12, fontWeight: 700 }}>{label}</span>
               <span style={{
-                color: bold ? '#fbbf24' : '#e2e8f0',
+                color: highlight ? '#fbbf24' : '#e2e8f0',
                 fontFamily: mono ? 'var(--font-mono)' : undefined,
-                fontWeight: bold ? 700 : 500,
-                fontSize: mono ? 11 : 12,
+                fontWeight: highlight ? 700 : 500,
+                fontSize: 12,
               }}>{value}</span>
             </div>
           ))}
-
-          {/* Risk Gauge */}
-          <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-              <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: 0.5 }}>RISK SCORE</span>
-              <span style={{ fontSize: 13, fontWeight: 900, color: '#ef4444' }}>{riskPct}%</span>
-            </div>
-            <div className="risk-bar-track">
-              <div className="risk-bar-fill" style={{ width: `${riskPct}%` }} />
-            </div>
-          </div>
         </div>
 
         {/* Predicted Withdrawal Points */}
-        <div>
-          <div style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', letterSpacing: 2, marginBottom: 10, textTransform: 'uppercase' }}>
-            ▸ PREDICTED WITHDRAWAL POINTS
+        <div style={{ marginTop: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <span style={{ fontSize: 13 }}>🔮</span>
+            <span style={{ fontSize: 10, fontWeight: 800, color: '#a5b4fc', letterSpacing: 1.5, textTransform: 'uppercase' }}>
+              PREDICTED WITHDRAWAL POINTS
+            </span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {alert.predicted_atms.map((pred: PredictedATM, i: number) => (
               <div key={i} style={{
-                background: 'rgba(251,191,36,0.04)',
-                border: `1px solid rgba(251,191,36,${0.15 - i * 0.04})`,
-                borderLeft: '3px solid #fbbf24',
-                borderRadius: 8, padding: 12,
-                animation: `fadeSlideIn ${0.2 + i * 0.1}s ease both`,
+                background: 'rgba(30,41,59,0.5)',
+                border: `1px solid rgba(255,255,255,0.05)`,
+                borderLeft: '4px solid #fbbf24',
+                borderRadius: 4, padding: 14,
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ color: '#fbbf24', fontWeight: 800, fontSize: 10, letterSpacing: 0.5 }}>#{i + 1} TARGET</span>
-                  <span style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700 }}>
-                    {(pred.probability * 100).toFixed(0)}% PROB
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ color: '#fbbf24', fontWeight: 800, fontSize: 12 }}>#{i + 1}</span>
+                  <span style={{ color: '#e2e8f0', fontSize: 11, fontWeight: 700 }}>
+                    {(pred.probability * 100).toFixed(0)}% Match
                   </span>
                 </div>
-                <div style={{ color: '#e2e8f0', fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{pred.location}</div>
-                <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'var(--text-muted)' }}>
-                  <span>⏱ ETA: {pred.estimated_time}</span>
-                  {pred.distance !== undefined && <span>📍 {pred.distance} km</span>}
+                <div style={{ color: '#f8fafc', fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{pred.location}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  <span>Lat: {pred.lat.toFixed(4)}</span>
+                  <span>ETA: {pred.estimated_time || '15 mins'}</span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Timestamp */}
-        <div style={{ fontSize: 10, color: 'var(--text-muted)', textAlign: 'center', fontFamily: 'var(--font-mono)', paddingTop: 4 }}>
-          Detected at {new Date(alert.timestamp).toLocaleTimeString('en-IN')}
-        </div>
+      </div>
+
+      {/* Footer Buttons */}
+      <div style={{ padding: 16, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'grid', gap: 8 }}>
+        <button className="btn btn-primary" onClick={onDeployUnits} style={{ width: '100%', justifyContent: 'center', padding: '12px' }}>
+          🚀 DEPLOY LEA TEAMS
+        </button>
+        <button className="btn" onClick={onFreezeAccounts} style={{ width: '100%', justifyContent: 'center', padding: '12px', background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)' }}>
+          ❄️ FREEZE ACCOUNTS
+        </button>
       </div>
     </div>
   );
