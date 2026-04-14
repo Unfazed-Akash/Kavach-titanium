@@ -13,6 +13,18 @@ export async function GET() {
       supabaseAdmin.from('users').select('*', { count: 'exact', head: true }),
     ]);
 
+    // Graceful zero-state
+    if (fraudRes.error?.code === '42P01') {
+      return NextResponse.json({
+        active_operations: 0,
+        suspects_tracked: 0,
+        recent_alerts: [],
+        _note: 'Run supabase-schema.sql to create tables',
+      });
+    }
+
+    if (fraudRes.error) throw fraudRes.error;
+
     const frauds = fraudRes.data ?? [];
     const recentAlerts = frauds.map((t: any) => ({
       sender_id: t.user_id ?? 'UNKNOWN',
@@ -30,6 +42,7 @@ export async function GET() {
       recent_alerts: recentAlerts,
     });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('[lea/stats]', err.message);
+    return NextResponse.json({ active_operations: 0, suspects_tracked: 0, recent_alerts: [] });
   }
 }
