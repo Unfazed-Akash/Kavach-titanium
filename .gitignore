@@ -1,0 +1,16 @@
+# Kavach Titanium — Next.js
+node_modules/
+.next/
+.env.local
+.env.production
+*.db
+*.db-journal
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+python/venv/
+python/*.pkl
+python/data/*.csv
+.DS_Store
+Thumbs.db
