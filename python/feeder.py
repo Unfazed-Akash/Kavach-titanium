@@ -189,13 +189,13 @@ async def main():
         print('[Socket] Disconnected from relay server')
 
     @sio.event
-    async def start_simulation(_):
+    async def start_simulation(*args):
         global running
         running = True
         print('>>> SIMULATION STARTED <<<')
 
     @sio.event
-    async def stop_simulation(_):
+    async def stop_simulation(*args):
         global running
         running = False
         print('>>> SIMULATION PAUSED <<<')
