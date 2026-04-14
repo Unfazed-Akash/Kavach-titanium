@@ -26,7 +26,7 @@ export default function RootLayout({
       </head>
       <body>
         <Navbar />
-        <main style={{ paddingTop: 'var(--nav-height)', height: '100vh', overflow: 'hidden' }}>
+        <main style={{ paddingTop: 'var(--nav-height)', height: '100vh', overflow: 'auto' }}>
           {children}
         </main>
       </body>

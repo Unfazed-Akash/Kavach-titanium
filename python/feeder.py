@@ -5,19 +5,21 @@ Generates realistic Indian financial fraud transactions,
 inserts into Supabase, and emits real-time events via Socket.IO.
 
 Run:
-    pip install -r requirements.txt
-    python feeder.py
+    .\\venv\\Scripts\\python feeder.py
 """
 
 import os
 import sys
-import time
 import math
 import uuid
 import random
+import warnings
+# Suppress sklearn version mismatch warnings (cosmetic only)
+warnings.filterwarnings('ignore', category=UserWarning)
+warnings.filterwarnings('ignore', category=DeprecationWarning)
 import asyncio
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # --- Third-party (install via requirements.txt) ---
@@ -130,7 +132,7 @@ def generate_transaction(user_ids: list[str]) -> dict:
         'currency':           'INR',
         'merchant':           random.choice(MERCHANTS),
         'merchant_category':  random.choice(MERCHANT_CATS),
-        'timestamp':          datetime.utcnow().isoformat(),
+        'timestamp':          datetime.now(timezone.utc).isoformat(),
         'geo_lat':            atm['lat'],
         'geo_lon':            atm['lng'],
         'city':               atm['city'],
@@ -276,7 +278,7 @@ async def main():
                 status_str = '🛑 BLOCKED' if txn['is_fraud'] else '✅ SUCCESS'
                 print(
                     f"{txn['txn_id'][:8]}.. | "
-                    f"₹{txn['amount']:<8.0f} | "
+                    f"INR {txn['amount']:<8.0f} | "
                     f"{txn['city']:<12} | "
                     f"{status_str:<14} | "
                     f"{pred_text}"

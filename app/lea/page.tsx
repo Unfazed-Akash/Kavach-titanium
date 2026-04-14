@@ -85,7 +85,7 @@ export default function LEAPage() {
               padding: '14px 16px',
             }}>
               <div style={{ fontSize: 9, color, fontWeight: 800, letterSpacing: 1.5, marginBottom: 6 }}>{label}</div>
-              <div style={{ fontSize: 28, fontWeight: 900, color, lineHeight: 1, fontFamily: 'var(--font-display)' }}>{value}</div>
+              <div style={{ fontSize: 28, fontWeight: 900, color, lineHeight: 1, fontFamily: 'var(--font-sans)' }}>{value}</div>
               <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>{sub}</div>
             </div>
           ))}

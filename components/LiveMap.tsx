@@ -56,6 +56,9 @@ export default function LiveMap({ atms, transactions, alerts, onAlertClick }: Li
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
+        if (containerRef.current) {
+          (containerRef.current as any)._leaflet_id = null;
+        }
       }
     };
   }, []);
