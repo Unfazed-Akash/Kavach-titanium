@@ -41,6 +41,9 @@ export default function GodEyeDashboard() {
   useEffect(() => {
     const socket = getSocket();
 
+    // Set initial connection state based on socket property
+    setConnected(socket.connected);
+
     socket.on('connect', () => setConnected(true));
     socket.on('disconnect', () => setConnected(false));
     socket.on('sim_status', (s: { running: boolean }) => setSimulating(s.running));
